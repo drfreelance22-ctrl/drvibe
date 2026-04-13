@@ -5,8 +5,8 @@ const themeColors = {
   accent: { light: '#F59E0B', dark: '#F59E0B' }, // Amber (golden)
   background: { light: '#FFFFFF', dark: '#0F172A' }, // Dark slate
   surface: { light: '#F8FAFC', dark: '#1E293B' }, // Light slate
-  foreground: { light: '#0F172A', dark: '#F1F5F9' }, // Dark text / Light text
-  muted: { light: '#64748B', dark: '#94A3B8' }, // Gray
+  foreground: { light: '#000000', dark: '#FFFFFF' }, // Black text / White text (high contrast)
+  muted: { light: '#475569', dark: '#CBD5E1' }, // Darker gray for better contrast
   border: { light: '#E2E8F0', dark: '#334155' }, // Border
   success: { light: '#10B981', dark: '#34D399' }, // Green
   warning: { light: '#F59E0B', dark: '#FBBF24' }, // Amber
