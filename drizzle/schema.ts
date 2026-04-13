@@ -25,4 +25,38 @@ export const users = mysqlTable("users", {
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 
-// TODO: Add your tables here
+// Meditations table - admin-managed shared library
+export const meditations = mysqlTable("meditations", {
+  id: int("id").autoincrement().primaryKey(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  duration: int("duration").notNull(), // in seconds
+  type: mysqlEnum("type", ["audio", "video"]).notNull(),
+  fileUrl: text("fileUrl").notNull(), // S3 URL
+  thumbnailUrl: text("thumbnailUrl"), // Optional thumbnail
+  chakra: varchar("chakra", { length: 50 }), // Optional chakra association
+  isActive: int("isActive").default(1).notNull(), // 1 = active, 0 = inactive
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Meditation = typeof meditations.$inferSelect;
+export type InsertMeditation = typeof meditations.$inferInsert;
+
+// Subscriptions table - track user subscriptions
+export const subscriptions = mysqlTable("subscriptions", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  stripeCustomerId: varchar("stripeCustomerId", { length: 255 }).notNull(),
+  stripeSubscriptionId: varchar("stripeSubscriptionId", { length: 255 }).notNull().unique(),
+  status: mysqlEnum("status", ["active", "canceled", "past_due", "trialing"]).notNull(),
+  currentPeriodStart: timestamp("currentPeriodStart").notNull(),
+  currentPeriodEnd: timestamp("currentPeriodEnd").notNull(),
+  trialStart: timestamp("trialStart"),
+  trialEnd: timestamp("trialEnd"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Subscription = typeof subscriptions.$inferSelect;
+export type InsertSubscription = typeof subscriptions.$inferInsert;

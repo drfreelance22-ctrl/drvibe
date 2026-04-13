@@ -1,6 +1,6 @@
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users } from "../drizzle/schema";
+import { InsertUser, users, meditations, subscriptions, InsertMeditation, InsertSubscription, Meditation, Subscription } from "../drizzle/schema";
 import { ENV } from "./_core/env";
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -89,4 +89,112 @@ export async function getUserByOpenId(openId: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
-// TODO: add feature queries here as your schema grows.
+// ============ MEDITATIONS ============
+
+export async function getAllMeditations(): Promise<Meditation[]> {
+  const db = await getDb();
+  if (!db) return [];
+
+  return db.select().from(meditations).where(eq(meditations.isActive, 1));
+}
+
+export async function getMeditationById(id: number): Promise<Meditation | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+
+  const result = await db.select().from(meditations).where(eq(meditations.id, id));
+  return result[0];
+}
+
+export async function createMeditation(data: InsertMeditation): Promise<number> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const result = await db.insert(meditations).values(data);
+  return (result as any).insertId || 0;
+}
+
+export async function updateMeditation(id: number, data: Partial<InsertMeditation>): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  await db.update(meditations).set(data).where(eq(meditations.id, id));
+}
+
+export async function deleteMeditation(id: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  // Soft delete - mark as inactive
+  await db.update(meditations).set({ isActive: 0 }).where(eq(meditations.id, id));
+}
+
+// ============ SUBSCRIPTIONS ============
+
+export async function getUserSubscription(userId: number): Promise<Subscription | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+
+  const result = await db.select().from(subscriptions).where(eq(subscriptions.userId, userId));
+  return result[0];
+}
+
+export async function getSubscriptionByStripeId(stripeSubscriptionId: string): Promise<Subscription | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+
+  const result = await db
+    .select()
+    .from(subscriptions)
+    .where(eq(subscriptions.stripeSubscriptionId, stripeSubscriptionId));
+  return result[0];
+}
+
+export async function createSubscription(data: InsertSubscription): Promise<number> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const result = await db.insert(subscriptions).values(data);
+  return (result as any).insertId || 0;
+}
+
+export async function updateSubscription(id: number, data: Partial<InsertSubscription>): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  await db.update(subscriptions).set(data).where(eq(subscriptions.id, id));
+}
+
+export async function updateSubscriptionByStripeId(
+  stripeSubscriptionId: string,
+  data: Partial<InsertSubscription>
+): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  await db.update(subscriptions).set(data).where(eq(subscriptions.stripeSubscriptionId, stripeSubscriptionId));
+}
+
+export async function isUserSubscriptionActive(userId: number): Promise<boolean> {
+  const db = await getDb();
+  if (!db) return false;
+
+  const result = await db
+    .select()
+    .from(subscriptions)
+    .where(
+      and(
+        eq(subscriptions.userId, userId),
+        eq(subscriptions.status, "active")
+      )
+    );
+
+  return result.length > 0;
+}
+
+export async function deleteSubscription(id: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  await db.update(subscriptions).set({ status: "canceled" }).where(eq(subscriptions.id, id));
+}
