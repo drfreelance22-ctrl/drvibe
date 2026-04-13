@@ -39,6 +39,7 @@ function RootLayoutContent() {
     }
   }, [user, loading, router]);
 
+  // Show loading screen while user data is being loaded
   if (loading) {
     return (
       <View className="flex-1 bg-slate-950 items-center justify-center">
@@ -47,31 +48,15 @@ function RootLayoutContent() {
     );
   }
 
-  return user ? <RootLayoutNav /> : null;
+  // Always render the stack - onboarding and tabs are both valid routes
+  return <RootLayoutNav />;
 }
 
 function RootLayoutNav() {
-  const initialInsets = initialWindowMetrics?.insets ?? DEFAULT_WEB_INSETS;
-  const initialFrame = initialWindowMetrics?.frame ?? DEFAULT_WEB_FRAME;
-
-  const [insets, setInsets] = useState<EdgeInsets>(initialInsets);
-  const [frame, setFrame] = useState<Rect>(initialFrame);
-
   // Initialize Manus runtime for cookie injection from parent container
   useEffect(() => {
     initManusRuntime();
   }, []);
-
-  const handleSafeAreaUpdate = useCallback((metrics: Metrics) => {
-    setInsets(metrics.insets);
-    setFrame(metrics.frame);
-  }, []);
-
-  useEffect(() => {
-    if (Platform.OS !== "web") return;
-    const unsubscribe = subscribeSafeAreaInsets(handleSafeAreaUpdate);
-    return () => unsubscribe();
-  }, [handleSafeAreaUpdate]);
 
   // Create clients once and reuse them
   const [queryClient] = useState(
@@ -89,53 +74,22 @@ function RootLayoutNav() {
   );
   const [trpcClient] = useState(() => createTRPCClient());
 
-  // Ensure minimum 8px padding for top and bottom on mobile
-  const providerInitialMetrics = useMemo(() => {
-    const metrics = initialWindowMetrics ?? { insets: initialInsets, frame: initialFrame };
-    return {
-      ...metrics,
-      insets: {
-        ...metrics.insets,
-        top: Math.max(metrics.insets.top, 16),
-        bottom: Math.max(metrics.insets.bottom, 12),
-      },
-    };
-  }, [initialInsets, initialFrame]);
-
-  const content = (
+  return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <trpc.Provider client={trpcClient} queryClient={queryClient}>
         <QueryClientProvider client={queryClient}>
           {/* Default to hiding native headers so raw route segments don't appear (e.g. "(tabs)", "products/[id]"). */}
           {/* If a screen needs the native header, explicitly enable it and set a human title via Stack.Screen options. */}
-          {/* in order for ios apps tab switching to work properly, use presentation: "fullScreenModal" for login page, whenever you decide to use presentation: "modal*/}
           <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name="(tabs)" />
             <Stack.Screen name="onboarding" />
             <Stack.Screen name="oauth/callback" />
+            <Stack.Screen name="admin" />
           </Stack>
           <StatusBar style="auto" />
         </QueryClientProvider>
       </trpc.Provider>
     </GestureHandlerRootView>
-  );
-
-  const shouldOverrideSafeArea = Platform.OS === "web";
-
-  if (shouldOverrideSafeArea) {
-    return (
-      <SafeAreaProvider initialMetrics={providerInitialMetrics}>
-        <SafeAreaFrameContext.Provider value={frame}>
-          <SafeAreaInsetsContext.Provider value={insets}>
-            {content}
-          </SafeAreaInsetsContext.Provider>
-        </SafeAreaFrameContext.Provider>
-      </SafeAreaProvider>
-    );
-  }
-
-  return (
-    <SafeAreaProvider initialMetrics={providerInitialMetrics}>{content}</SafeAreaProvider>
   );
 }
 
