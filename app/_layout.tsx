@@ -43,7 +43,7 @@ function RootLayoutContent() {
   if (loading) {
     return (
       <View className="flex-1 bg-slate-950 items-center justify-center">
-        <Text className="text-slate-300">Loading...</Text>
+        <Text className="text-white">Loading...</Text>
       </View>
     );
   }

@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useColorScheme as useRNColorScheme } from "react-native";
 
 /**
- * To support static rendering, this value needs to be re-calculated on the client side for web
+ * To support static rendering, this value needs to be re-calculated on the client side for web.
+ * Force dark mode as default for better UX and visibility.
  */
 export function useColorScheme() {
   const [hasHydrated, setHasHydrated] = useState(false);
@@ -14,8 +15,10 @@ export function useColorScheme() {
   const colorScheme = useRNColorScheme();
 
   if (hasHydrated) {
-    return colorScheme;
+    // Return dark mode if system scheme is not available
+    return colorScheme || "dark";
   }
 
-  return "light";
+  // Default to dark mode on initial render
+  return "dark";
 }
