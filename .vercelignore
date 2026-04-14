@@ -1,0 +1,13 @@
+.git
+.gitignore
+README.md
+node_modules
+.env.local
+.env.*.local
+dist
+dist-web
+.expo
+.next
+.nuxt
+out
+build

@@ -56,7 +56,6 @@ async function handleSubscriptionCreated(subscription: any) {
     status: (subscription.status as any) || 'trialing',
     currentPeriodStart: new Date(subscription.current_period_start * 1000),
     currentPeriodEnd: new Date(subscription.current_period_end * 1000),
-    trialStart,
     trialEnd,
   });
 }
@@ -74,7 +73,6 @@ async function handleSubscriptionUpdated(subscription: any) {
     status: (subscription.status as any) || 'active',
     currentPeriodStart: new Date(subscription.current_period_start * 1000),
     currentPeriodEnd: new Date(subscription.current_period_end * 1000),
-    trialStart,
     trialEnd,
   });
 }
