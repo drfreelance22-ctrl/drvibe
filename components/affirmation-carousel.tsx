@@ -53,12 +53,12 @@ export function AffirmationCarousel({ autoAdvance = true, interval = 5000 }: Aff
         }}
       >
         {/* Chakra Name */}
-        <Text className="text-sm font-semibold text-slate-400 mb-4 uppercase tracking-wider">
+        <Text className="text-sm font-semibold text-white mb-4 uppercase tracking-wider">
           {currentChakra.name}
         </Text>
 
         {/* Affirmation Text */}
-        <Text className="text-2xl font-bold text-center text-slate-100 leading-relaxed">
+        <Text className="text-2xl font-bold text-center text-white leading-relaxed">
           "{affirmation}"
         </Text>
 
@@ -74,7 +74,7 @@ export function AffirmationCarousel({ autoAdvance = true, interval = 5000 }: Aff
           style={({ pressed }) => [{ opacity: pressed ? 0.6 : 1 }]}
           className="flex-1 bg-slate-800 rounded-lg py-3 items-center border border-slate-700"
         >
-          <Text className="text-slate-300 font-semibold">← Previous</Text>
+          <Text className="text-white font-semibold">← Previous</Text>
         </Pressable>
 
         {/* Indicator Dots */}
@@ -84,7 +84,7 @@ export function AffirmationCarousel({ autoAdvance = true, interval = 5000 }: Aff
               key={index}
               className="w-2 h-2 rounded-full"
               style={{
-                backgroundColor: index === currentIndex ? currentChakra.color : '#475569',
+                backgroundColor: index === currentIndex ? currentChakra.color : '#FFFFFF',
               }}
             />
           ))}
@@ -96,12 +96,12 @@ export function AffirmationCarousel({ autoAdvance = true, interval = 5000 }: Aff
           style={({ pressed }) => [{ opacity: pressed ? 0.6 : 1 }]}
           className="flex-1 bg-slate-800 rounded-lg py-3 items-center border border-slate-700"
         >
-          <Text className="text-slate-300 font-semibold">Next →</Text>
+          <Text className="text-white font-semibold">Next →</Text>
         </Pressable>
       </View>
 
       {/* Chakra Progress */}
-      <Text className="text-xs text-center text-slate-500">
+      <Text className="text-xs text-center text-white">
         {currentIndex + 1} / {CHAKRAS.length}
       </Text>
     </View>

@@ -50,8 +50,8 @@ export default function HomeScreen() {
         <View className="gap-8 pb-8">
           {/* Header */}
           <View className="gap-2">
-            <Text className="text-3xl font-bold text-slate-100">{greeting}</Text>
-            <Text className="text-sm text-slate-400">
+            <Text className="text-3xl font-bold text-white">{greeting}</Text>
+            <Text className="text-sm text-white">
               {new Date().toLocaleDateString('en-US', {
                 weekday: 'long',
                 month: 'long',
@@ -65,7 +65,7 @@ export default function HomeScreen() {
 
           {/* Today's Progress */}
           <View className="bg-slate-800 rounded-2xl p-6 gap-4 border border-slate-700">
-            <Text className="text-sm font-semibold text-slate-300 uppercase tracking-wider">
+            <Text className="text-sm font-semibold text-white uppercase tracking-wider">
               Today's Self-Care
             </Text>
 
@@ -77,7 +77,7 @@ export default function HomeScreen() {
                   style={{ width: `${(todaySelfCare / totalSelfCare) * 100}%` }}
                 />
               </View>
-              <Text className="text-sm text-slate-300 font-semibold">
+              <Text className="text-sm text-white font-semibold">
                 {todaySelfCare} of {totalSelfCare} completed
               </Text>
             </View>
@@ -85,23 +85,23 @@ export default function HomeScreen() {
             {/* Quick Stats */}
             <View className="flex-row gap-3 pt-2">
               <View className="flex-1 bg-slate-700 rounded-lg p-3 items-center">
-                <Text className="text-xs text-slate-400">Mood Entries</Text>
-                <Text className="text-lg font-bold text-violet-300">—</Text>
+                <Text className="text-xs text-white">Mood Entries</Text>
+                <Text className="text-lg font-bold text-white">—</Text>
               </View>
               <View className="flex-1 bg-slate-700 rounded-lg p-3 items-center">
-                <Text className="text-xs text-slate-400">Meditations</Text>
-                <Text className="text-lg font-bold text-rose-300">—</Text>
+                <Text className="text-xs text-white">Meditations</Text>
+                <Text className="text-lg font-bold text-white">—</Text>
               </View>
               <View className="flex-1 bg-slate-700 rounded-lg p-3 items-center">
-                <Text className="text-xs text-slate-400">Streak</Text>
-                <Text className="text-lg font-bold text-amber-300">—</Text>
+                <Text className="text-xs text-white">Streak</Text>
+                <Text className="text-lg font-bold text-white">—</Text>
               </View>
             </View>
           </View>
 
           {/* Quick Access Buttons */}
           <View className="gap-3">
-            <Text className="text-sm font-semibold text-slate-300 uppercase tracking-wider">
+            <Text className="text-sm font-semibold text-white uppercase tracking-wider">
               Quick Access
             </Text>
 

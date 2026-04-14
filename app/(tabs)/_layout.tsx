@@ -71,6 +71,13 @@ export default function TabLayout() {
           tabBarIcon: () => <Text style={{ fontSize: 24 }}>🏆</Text>,
         }}
       />
+      <Tabs.Screen
+        name="settings"
+        options={{
+          title: 'Settings',
+          tabBarIcon: () => <Text style={{ fontSize: 24 }}>⚙️</Text>,
+        }}
+      />
     </Tabs>
   );
 }
