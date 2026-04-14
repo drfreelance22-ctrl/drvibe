@@ -115,6 +115,8 @@
 
 ## Deployment
 
+- [x] Fix Metro/NativeWind/react-native-css-interop build error for Vercel deployment
+- [ ] Set up Vercel deploy hook for automatic deployments
 - [ ] Create checkpoint before first delivery
 - [ ] Generate APK/IPA builds
 - [ ] Test on real devices
