@@ -1,28 +1,19 @@
 const { getDefaultConfig } = require("expo/metro-config");
 const { withNativeWind } = require("nativewind/metro");
-const fs = require("fs");
-const path = require("path");
 
 const config = getDefaultConfig(__dirname);
 
-// Ensure cache directory exists before Metro starts
-const cacheDir = path.join(__dirname, "node_modules/react-native-css-interop/.cache");
-const cacheFile = path.join(cacheDir, "web.css");
+// Only use NativeWind for native platforms (iOS, Android)
+// For web, we use plain CSS to avoid Metro cache issues with react-native-css-interop
+const isWeb = process.env.EXPO_OS === "web" || process.env.PLATFORM === "web";
 
-try {
-  if (!fs.existsSync(cacheDir)) {
-    fs.mkdirSync(cacheDir, { recursive: true });
-  }
-  if (!fs.existsSync(cacheFile)) {
-    fs.writeFileSync(cacheFile, "/* NativeWind CSS Cache */\n", "utf8");
-  }
-} catch (error) {
-  console.warn("Warning: Could not create cache file:", error.message);
+if (isWeb) {
+  // For web builds, use plain Metro config without NativeWind
+  module.exports = config;
+} else {
+  // For native builds, use NativeWind with Tailwind CSS
+  module.exports = withNativeWind(config, {
+    input: "./global.css",
+    forceWriteFileSystem: true,
+  });
 }
-
-module.exports = withNativeWind(config, {
-  input: "./global.css",
-  // Force write CSS to file system instead of virtual modules
-  // This fixes iOS styling issues in development mode
-  forceWriteFileSystem: true,
-});
