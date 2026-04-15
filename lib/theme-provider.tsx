@@ -1,5 +1,6 @@
+import { vars } from "nativewind";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { Appearance, View, useColorScheme as useSystemColorScheme, StyleSheet } from "react-native";
+import { Appearance, View, useColorScheme as useSystemColorScheme } from "react-native";
 
 import { SchemeColors, type ColorScheme } from "@/constants/theme";
 
@@ -36,13 +37,14 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     applyScheme(colorScheme);
   }, [applyScheme, colorScheme]);
 
-  // Build inline style variables for native (replaces NativeWind vars())
+  // Build NativeWind CSS variable style for native platforms
   const themeStyle = useMemo(() => {
     const palette = SchemeColors[colorScheme];
-    return {
-      flex: 1 as const,
-      backgroundColor: palette.background,
-    };
+    const cssVars: Record<string, string> = {};
+    Object.entries(palette).forEach(([token, value]) => {
+      cssVars[`--color-${token}`] = value;
+    });
+    return vars(cssVars);
   }, [colorScheme]);
 
   const value = useMemo(
@@ -55,7 +57,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <ThemeContext.Provider value={value}>
-      <View style={themeStyle}>{children}</View>
+      <View style={[themeStyle, { flex: 1 }]}>{children}</View>
     </ThemeContext.Provider>
   );
 }

@@ -1,4 +1,5 @@
 import "@/global.css";
+import "@/lib/_core/nativewind-pressable";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
